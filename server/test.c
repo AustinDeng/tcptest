@@ -1,8 +1,7 @@
-#include "append.h"
 #include "server.h"
 
-int main() {  
-    append_data("Hello, World!\n");
+int main() {
+    printf("---- start ----\n");
     server_main();
     return 0;
 }

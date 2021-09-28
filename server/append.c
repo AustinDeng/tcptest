@@ -7,10 +7,10 @@ int append_data(char* data) {
     if(fb2c != NULL) {
         fprintf(fb2c, "%s", data);
         fclose(fb2c);
-        printf("Done!\n");
+        printf("数据写入成功!\n");
     } else {
         printf(STORE_DIR);
-        printf("error\n");
+        printf("数据写入失败\n");
     }
     
     return 0;

@@ -14,4 +14,5 @@ test:
 clean:
 	rm -rf append.o
 	rm -rf server.o
+	rm -rf test
 
