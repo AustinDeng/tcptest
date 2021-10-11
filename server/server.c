@@ -1,14 +1,11 @@
 #include "server.h"
 
-
-
-int server_main()
-{	
+int server_main() {	
 	 // 初始化互斥锁
-	if (pthread_mutex_init(&mutex, NULL) != 0){
-			// 互斥锁初始化失败
-			printf("Init mutex fail!");
-			return 1;
+	if (pthread_mutex_init(&mutex, NULL) != 0) {
+		// 互斥锁初始化失败
+		printf("Init mutex fail!\n");
+		return 1;
 	}
 	// socket句柄
 	int iSocketFD = 0;
@@ -25,9 +22,8 @@ int server_main()
 	socklen_t socklen = 0;  	
 	// 建立socket
 	iSocketFD = socket(AF_INET, SOCK_STREAM, 0);
-	if(0 > iSocketFD)
-	{
-		printf("创建socket失败！\n");
+	if(0 > iSocketFD) {
+		printf("create socket fail!\n");
 		return 0;
 	}
 	// 该属性表示接收本机或其他机器传输
@@ -37,26 +33,21 @@ int server_main()
 	// IP，括号内容表示本机IP
 	stLocalAddr.sin_addr.s_addr=htonl(INADDR_ANY);
 	//绑定地址结构体和socket
-	if(0 > bind(iSocketFD, (void *)&stLocalAddr, sizeof(stLocalAddr)))
-	{
+	if(0 > bind(iSocketFD, (void *)&stLocalAddr, sizeof(stLocalAddr))) {
 		printf("Binding fail！\n");
 		return 0;
 	}
 	//开启监听 ，第二个参数是最大监听数
-	if(0 > listen(iSocketFD, BACKLOG))
-	{
+	if(0 > listen(iSocketFD, BACKLOG)) {
 		printf("Listening fail!\n");
 		return 0;
 	}
-
 	printf("Listening success!The iSocketFD: %d\n", iSocketFD);
-	
-	// pthread_t *pt = (pthread_t *)malloc(sizeof(pthread_t)*THREAD_NUM);
+
 	while(1) {
 		//在这里阻塞直到接收到消息，参数分别是socket句柄，接收到的地址信息以及大小 
 		new_fd = accept(iSocketFD, (void *)&stRemoteAddr, &socklen);
-		if(0 > new_fd)
-		{
+		if(0 > new_fd) {
 			printf("Accept Fail!\n");
 			return 0;
 		}
@@ -64,22 +55,6 @@ int server_main()
 
 		pthread_t thread; //定义一个线程号
 		pthread_create(&thread, NULL, start_routine, (void *)&new_fd);
-
-		// recv(new_fd, buf, sizeof(buf), 0);
-		// printf("Get the message from cilent：%s ", buf);
-		// // 将数据写入文件中
-		// append_data(buf);
-		// //发送内容，参数分别是连接句柄，内容，大小，其他信息（设为0即可） 
-		// send(new_fd, "Data processing is completed!", sizeof("Data processing is completed!"), 0);
-		
-		// iRecvLen = recv(new_fd, buf, sizeof(buf), 0);	
-		// if(0 >= iRecvLen)    //对端关闭连接返回0
-		// {	
-		// 	printf("The client closes the connection！\n");
-		// }else{
-		// 	printf("buf: %s\n", buf);
-		// }	
-		// close(new_fd);
 	}
 	close(iSocketFD);
 	pthread_mutex_destroy(&mutex);

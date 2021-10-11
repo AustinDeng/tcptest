@@ -30,6 +30,7 @@
 // 消息缓存队列长度
 #define MSG_BUF 128
 
+// 文件读写锁
 pthread_mutex_t mutex;
 
 #endif
